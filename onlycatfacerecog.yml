@@ -1,0 +1,46 @@
+---
+pipeline:
+- name: cat-face-recognizer
+  type: recognizer
+  inputs: 
+  - files
+  
+  params:
+  
+    # The model directory where model files were generated during training.
+    model: /root/models/mycats/
+    
+    # strategies: list of recognizers to run. one or more of [eigen, fischer, lbp]
+    strategies:
+    - eigen
+    - fischer
+    - lbp
+    # output : which labels to output. Can be one of [all, mostvotes, <strategies>] where
+    # 
+    # "all" means outputs of all strategies
+    # "mostvotes" means single output which has most votes from multiple strategies. If there'
+    #       no clear majority, it'll output all.
+    # "<strategies>" means output of one or more of the strategies above. 
+    #       For example, 
+    #           output: 
+    #           - lbp
+    #           - eigen
+    #       means include only outputs of lbp and eigen in the outputs.
+    outputlabel: 
+    - fischer
+
+
+
+
+- name: annotatedphotowriter
+  type: photowriter 
+  inputs:
+  - cat-face-recognizer
+  
+  params:
+    format: jpg
+    size: 
+      width: 640
+      height: 480
+
+

@@ -1,0 +1,46 @@
+---
+pipeline:
+  # A name for this pipeline component
+- name: coco-detector
+
+  # type can be one of [deepdetector, simpledetector, recognizer]
+  type: deepdetector
+  
+  # "files" is a special keyword, meaning the inputs for this detector
+  # are the raw photo or video files. If this is the name of another pipeline component
+  # then the component uses the outputs of that component instead of the
+  # raw source files.
+  inputs: 
+  - files 
+  
+  # Parameters for the component
+  params: 
+    model: /root/darkflow/cfg/yolo.cfg
+    weights: /root/darkflow/cfg/yolo.weights
+
+
+- name: cat-face-detector-lbp
+  type: simpledetector
+  inputs: 
+  - files
+
+  params:
+    model: /root/data/lbpcascades/lbpcascade_frontalcatface.xml
+    
+    # Label to give to ROIs of this detector.
+    outputlabel: catface
+    
+    # Detection is run only on ROIs which match these labels.
+    triggerlabels:
+    - cat
+    
+    # Optional params for cascade classifier to adjust false positive and false negative
+    # rates.
+    scaledown_factor: 1.1
+    min_neighbors: 0
+
+- name: combinedreporter
+  type: jsonreportwriter
+  inputs: 
+  - coco-detector
+  - cat-face-detector-lbp

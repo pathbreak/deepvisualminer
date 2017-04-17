@@ -1,0 +1,60 @@
+---
+pipeline:
+  # A name for this pipeline component
+- name: coco-detector
+
+  # type can be one of [deepdetector, simpledetector, recognizer]
+  type: deepdetector
+  
+  # "files" is a special keyword, meaning the inputs for this detector
+  # are the raw photo or video files. If this is the name of another pipeline component
+  # then the component uses the outputs of that component instead of the
+  # raw source files.
+  inputs: 
+  - files 
+  
+  # Parameters for the component
+  params: 
+    model: /root/darkflow/cfg/yolo.cfg
+    weights: /root/darkflow/cfg/yolo.weights
+    
+
+- name: videowriter
+  type: videowriter 
+  inputs:
+  - coco-detector
+  
+  params:
+    format: mp4
+    size: 
+      width: 640
+      height: 480
+
+
+
+
+- name: annotatedphotowriter
+  type: photowriter 
+  inputs:
+  - coco-detector
+  
+  params:
+    format: jpg
+    size: 
+      width: 640
+      height: 480
+
+
+
+
+
+- name: annotatedframewriter
+  type: framewriter 
+  inputs:
+  - coco-detector
+  
+  params:
+    format: jpg
+    size: 
+      width: 320
+      height: 240

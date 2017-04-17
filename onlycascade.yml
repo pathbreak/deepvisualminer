@@ -1,0 +1,52 @@
+---
+pipeline:
+- name: human-face-detector-haar
+  type: simpledetector
+
+  inputs: 
+  - files
+
+  params:
+    model: /root/data/haarcascades/haarcascade_frontalface_default.xml
+    
+    outputlabel: humanface
+    
+    # triggerlabels: The list of labels to filter on. Only ROIs with one of these
+    # labels are considered for detection.
+    triggerlabels:
+    - person
+
+
+- name: cat-face-detector-lbp
+  type: simpledetector
+  inputs: 
+  - files
+
+  params:
+    model: /root/data/lbpcascades/lbpcascade_frontalcatface.xml
+    
+    # Label to give to ROIs of this detector.
+    outputlabel: catface
+    
+    # Detection is run only on ROIs which match these labels.
+    triggerlabels:
+    - cat
+    
+    # Optional params for cascade classifier to adjust false positive and false negative
+    # rates.
+    scaledown_factor: 1.1
+    min_neighbors: 0
+
+
+
+- name: annotatedphotowriter
+  type: photowriter 
+  inputs:
+  - human-face-detector-haar
+  - cat-face-detector-lbp
+  
+  params:
+    format: jpg
+    size: 
+      width: 640
+      height: 480

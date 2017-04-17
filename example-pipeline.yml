@@ -1,0 +1,169 @@
+# A pipeline describes the list of detector and recognizer components to run on
+# input files. A pipeline can have any number of 
+# - deep detectors, which use YOLO for multiple object detection. Each
+#      deep detector can specify its own convolutional neural network configuration and 
+#      model obtained by training it on different datasets such as Pascal VOC, COCO, ImageNet, etc.
+#
+# - simple detectors, which use traditional cascade of weak classifiers
+#
+# - simple recognizers, which use Eigen faces, Fischer faces or LBPH recognition 
+#
+# All the component outputs for one input file - be it image or video - are saved in a single JSON report. Each input
+#   generated its own separate report file.
+#
+# Every component which is configured to output images outputs only its own relevant annotations
+#   in an image. So there may be multiple annotated image outputs for each input. A video input is considered
+#   as a sequence of frames and each frame results in separate output images. Output frames of a video can be combined back into
+#   a video.
+---
+pipeline:
+  # A name for this pipeline component
+- name: coco-detector
+
+  # type can be one of [deepdetector, simpledetector, recognizer]
+  type: deepdetector
+  
+  # "files" is a special keyword, meaning the inputs for this detector
+  # are the raw photo or video files. If this is the name of another pipeline component
+  # then the component uses the outputs of that component instead of the
+  # raw source files.
+  inputs: 
+  - files 
+  
+  # Parameters for the component
+  params: 
+    model: /root/darkflow/cfg/yolo.cfg
+    weights: /root/darkflow/cfg/yolo.weights
+  
+    
+    
+    
+    
+- name: human-face-detector-haar
+  type: simpledetector
+
+  inputs: 
+  - coco-detector
+
+  params:
+    model: /root/data/haarcascades/haarcascade_frontalface_default.xml
+    
+    outputlabel: humanface
+    
+    # triggerlabels: The list of labels to filter on. Only ROIs with one of these
+    # labels are considered for detection.
+    triggerlabels:
+    - person
+    
+    
+    
+    
+- name: cat-face-detector-lbp
+  type: simpledetector
+  inputs: 
+  - coco-detector
+
+  params:
+    model: /root/data/lbpcascades/lbpcascade_frontalcatface.xml
+    
+    # Label to give to ROIs of this detector.
+    outputlabel: catface
+    
+    # Detection is run only on ROIs which match these labels.
+    triggerlabels:
+    - cat
+    
+    # Optional params for cascade classifier to adjust false positive and false negative
+    # rates.
+    scaledown_factor: 1.1
+    min_neighbors: 3
+    
+    
+    
+    
+- name: cat-face-recognizer
+  type: recognizer
+  inputs: 
+  - cat-face-detector-lbp
+  
+  params:
+  
+    # The model directory where model files were generated during training.
+    model: /root/models/mycats/
+    
+    triggerlabels:
+    - catface
+    # strategies: list of recognizers to run. one or more of [eigen, fischer, lbp]
+    strategies:
+    - eigen
+    - fischer
+    - lbp
+    # output : which labels to output. Can be one of [all, mostvotes, <strategies>] where
+    # 
+    # "all" means outputs of all strategies
+    # "mostvotes" means single output which has most votes from multiple strategies. If there'
+    #       no clear majority, it'll output all.
+    # "<strategies>" means output of one or more of the strategies above. 
+    #       For example, 
+    #           output: 
+    #           - lbp
+    #           - eigen
+    #       means include only outputs of lbp and eigen in the outputs.
+    outputlabel: 
+    - mostvotes
+    
+  
+- name: combinedreporter
+  type: jsonreportwriter
+  inputs: 
+  - coco-detector
+  - human-face-detector-haar
+  - cat-face-detector-lbp
+  - cat-face-recognizer
+  
+  
+  
+- name: combinedvideowriter
+  type: videowriter 
+  inputs:
+  - coco-detector
+  - human-face-detector-haar
+  - cat-face-detector-lbp
+  - cat-face-recognizer
+  
+  params:
+    format: mp4
+    size: 
+      width: 640
+      height: 480
+  
+  
+  
+- name: combinedannotatedphotowriter
+  type: photowriter 
+  inputs:
+  - coco-detector
+  - human-face-detector-haar
+  - cat-face-detector-lbp
+  - cat-face-recognizer
+  
+  params:
+    format: jpg
+    size: 
+      width: 640
+      height: 480
+
+
+- name: combinedannotatedframewriter
+  type: framewriter 
+  inputs:
+  - coco-detector
+  - human-face-detector-haar
+  - cat-face-detector-lbp
+  - cat-face-recognizer
+  
+  params:
+    format: jpg
+    size: 
+      width: 128
+      height: 96
