@@ -21,7 +21,7 @@ COPY ./shared/darkflow /root/darkflow
 
 COPY ./opencv/data /root/data
 
-# TODO Install the video mining scripts
+# Install the video mining scripts
 COPY ./deepvisualminer /root/deepvisualminer
 
 #ADD ./my_service.py /my_service.py

@@ -1,0 +1,5 @@
+.dockerignore
+docker-deepvisualminer
+.git
+Readme.md
+LICENSE

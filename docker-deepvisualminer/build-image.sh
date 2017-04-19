@@ -46,8 +46,6 @@ else
 fi
 cd ./deepvisualminer
 git fetch
-rm -rf .git
-rm -rf docker-deepvisualminer
 
 cd ..
 
