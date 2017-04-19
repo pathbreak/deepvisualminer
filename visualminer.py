@@ -4,8 +4,6 @@ import os
 import os.path
 import sys
 
-sys.path.append('/root/darkflow')
-
 from pipeline import Pipeline, MultiPipelineExecutor
 
 # - Pipelines:
@@ -39,7 +37,8 @@ def detect(input_path, output_directory, pipeline_file):
     elif os.path.isdir(input_path):
         multiexecutor = MultiPipelineExecutor()
         multiexecutor.execute(pipeline_file, input_path, output_directory)
-    
+    else:
+        print("Input is not an image file or directory:", input_path)
     
 if __name__ == '__main__':
     detect(sys.argv[1], sys.argv[2], sys.argv[3])

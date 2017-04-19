@@ -19,7 +19,7 @@ python3 setup.py build_ext --inplace
 
 rm -rf ~/darkflow/.git
 
-mv ~/darkflow /mnt/host/
+mv ~/darkflow /mnt/shared/
 
 echo "DARKFLOW BUILD COMPLETED!"
 

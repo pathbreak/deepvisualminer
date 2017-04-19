@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/root/darkflow')
+
 from net.build import TFNet
 from basecomponent import BaseComponent
 from annotator import annotate
@@ -84,7 +87,9 @@ class DeepDetector(BaseComponent):
 
 
     def detect_in_image(self, input_data):
+        print("Deep detector starting " + input_data['file'])
         detections = self.nn.return_predict(input_data['img'])
+        print("Deep detector completed"  + input_data['file'])
         return detections
 
 

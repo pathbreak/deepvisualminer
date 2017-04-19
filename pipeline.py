@@ -14,6 +14,7 @@ import multiprocessing
 import os
 import os.path
 import yaml
+import sys
 
 class MultiPipelineExecutor(object):
     '''
@@ -31,6 +32,7 @@ class MultiPipelineExecutor(object):
         
         # Start pipelines.
         num_pipeline_processors = multiprocessing.cpu_count()
+        num_pipeline_processors = 1
         print('Creating %d pipelines' % num_pipeline_processors)
         pipeline_processors = [ 
             PipelineProcessor(pipeline_file, input_directory, output_directory, file_queue) 
@@ -62,11 +64,13 @@ class PipelineProcessor(multiprocessing.Process):
         multiprocessing.Process.__init__(self)
 
         self.file_queue = file_queue
-        
-        self.pipeline = Pipeline(pipeline_file, input_directory, output_directory)
-
+        self.pipeline_file = pipeline_file
+        self.input_directory = input_directory
+        self.output_directory = output_directory
         
     def run(self):
+        self.pipeline = Pipeline(self.pipeline_file, self.input_directory, self.output_directory)
+        
         proc_name = self.name
         while True:
             next_file = self.file_queue.get()
@@ -136,17 +140,23 @@ class Pipeline(object):
         # through the components of the pipeline.
         try:
             img = imageio.imread(input_file)
-            isphoto = True            
-        except:
+                
+            print("Image read")
             
+            isphoto = True            
+            
+        except:
+            print("Not a photo. Error while attempting to load:", sys.exc_info())
             # If input file is a video, open it and setup an iterator over its
             # frames. Then for each frame, send image, grayscale image, video filename,
             # frame number and isvideo flag through the components of the pipeline.
             video = None
             try:
                 video = imageio.get_reader(input_file, 'ffmpeg')
+                print("Video opened")
                 isvideo = True
             except:
+                print("Not a video. Error while attempting to open:", sys.exc_info())
                 if video:
                     video.close()
         
@@ -169,7 +179,7 @@ class Pipeline(object):
         elif isvideo:
             
             for frame_num, img in enumerate(video):
-                
+
                 input_data = {
                     'file' : input_file,
                     'img' : img,
@@ -188,21 +198,42 @@ class Pipeline(object):
     def _execute_pipeline_on_image(self, input_data):
         
         if input_data['img'].ndim == 3:
-            # It *appears* imageio imread returns RGB, not BGR...confirmed using a blue
+            # It *appears* imageio imread returns RGB or RGBA, not BGR...confirmed using a blue
             # filled rectangle that imageio is indeed RGB which is opposite of OpenCV's default BGR.
             # Use RGB consistently everywhere.
-            input_data['gray'] = cv2.cvtColor(input_data['img'], cv2.COLOR_RGB2GRAY)
+            if input_data['img'].shape[-1] == 4:
+                input_data['gray'] = cv2.cvtColor(input_data['img'], cv2.COLOR_RGBA2GRAY)
+                print("Input image seems to be 4-channel RGBA. Creating 3-channel RGB version")
+                input_data['img'] = cv2.cvtColor(input_data['img'], cv2.COLOR_RGBA2RGB)
+            else:
+                input_data['gray'] = cv2.cvtColor(input_data['img'], cv2.COLOR_RGB2GRAY)
+            
+        elif input_data['img'].ndim == 2:
+            # If input is a grayscale image, it'll have just 2 dimensions, 
+            # but Darkflow code expects 3 dimensions. So always keep 'img' a 3 dimension
+            # image no matter what.
+            print("Input image is grayscale. Creating RGB version")
+            input_data['gray'] = input_data['img'].copy()
+            input_data['img'] = cv2.cvtColor(input_data['img'], cv2.COLOR_GRAY2RGB)
+            
         else:
-            input_data['gray'] = input_data['img']
-            
+            raise "Unknown image format " + input_data['img'].shape
+        
+        print("Input image:", input_data['img'].shape)
+        
         for comp in self.components:
-            
+            print("Executing " + comp.name + " on " + input_data['file'])
             comp_outputs = comp.execute(input_data, self.input_directory, self.output_directory)
             
             # At each stage of the pipeline, collect the component's outputs
             # and add them to the input data so that they're available for 
             # downstream components.
             input_data[comp.name] = comp_outputs
+            
+        
+        # Release the image arrays.
+        input_data['img'] = None
+        input_data['gray'] = None
             
             
     def completed(self, input_data):
