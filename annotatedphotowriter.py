@@ -37,8 +37,11 @@ class AnnotatedPhotoWriter(BaseComponent):
             
         output_filepath =  os.path.join(output_filedir,
             inp_filename + '-annotated.' + self.cfg['params']['format'])
-            
-        final_img = cv2.resize(img, (self.cfg['params']['size']['width'], self.cfg['params']['size']['height']))
+        
+        if self.cfg['params'].get('size'):
+            final_img = cv2.resize(img, (self.cfg['params']['size']['width'], self.cfg['params']['size']['height']))
+        else:
+            final_img = img
             
         print(output_filepath)
         imageio.imwrite(output_filepath, final_img)

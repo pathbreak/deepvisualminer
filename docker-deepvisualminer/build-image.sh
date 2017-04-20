@@ -33,6 +33,7 @@ else
     git clone https://github.com/opencv/opencv
 fi
 cd ./opencv
+git pull
 git fetch
 
 cd ..
@@ -45,6 +46,7 @@ else
     git clone https://github.com/pathbreak/deepvisualminer
 fi
 cd ./deepvisualminer
+git pull
 git fetch
 
 cd ..
