@@ -1,0 +1,222 @@
+{
+    "type": "photo",
+    "file": "/media/karthik/Developer/developer/work/paid-articles/linode/spark-on-linode/deepvisualminer/images/img1.jpg",
+    "frames": [
+        {
+            "coco-detector": [
+                {
+                    "rect": [
+                        318,
+                        471,
+                        1518,
+                        871
+                    ],
+                    "labels": [
+                        {
+                            "confidence": 0.8568467497825623,
+                            "label": "cat"
+                        }
+                    ]
+                }
+            ],
+            "frame": 0,
+            "cat-face-detector-lbp": [
+                {
+                    "rect": [
+                        953,
+                        21,
+                        1010,
+                        78
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        1315,
+                        173,
+                        1390,
+                        248
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        846,
+                        200,
+                        929,
+                        283
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        1271,
+                        22,
+                        1346,
+                        97
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        286,
+                        128,
+                        522,
+                        364
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        1410,
+                        589,
+                        1467,
+                        646
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        832,
+                        604,
+                        889,
+                        661
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        285,
+                        632,
+                        342,
+                        689
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        591,
+                        539,
+                        659,
+                        607
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        232,
+                        649,
+                        323,
+                        740
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        756,
+                        778,
+                        847,
+                        869
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        804,
+                        698,
+                        914,
+                        808
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        230,
+                        647,
+                        330,
+                        747
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        1153,
+                        851,
+                        1210,
+                        908
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                },
+                {
+                    "rect": [
+                        420,
+                        885,
+                        541,
+                        1006
+                    ],
+                    "labels": [
+                        {
+                            "label": "catface"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

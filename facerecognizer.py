@@ -60,6 +60,8 @@ class FaceRecognizer(BaseComponent):
             self.train_img_size = (self.model['height'], self.model['width'])
             self.labels = self.model['labels']
         
+        self.equalize_hist = params.get('equalizehist', False)
+        
         
     def execute(self, input_data, input_directory, output_directory):
         
@@ -80,7 +82,7 @@ class FaceRecognizer(BaseComponent):
                 comp_outputs = input_data.get(source)
                 if comp_outputs:
                     comp_reports = comp_outputs['reports']
-                    detections = self.detect_in_rois(self, input_data, comp_reports)
+                    detections = self.detect_in_rois(input_data, comp_reports)
                     all_detections.extend(detections)
 
         print(all_detections)
@@ -102,8 +104,9 @@ class FaceRecognizer(BaseComponent):
 
 
     def detect_in_rois(self, input_data, comp_reports):
-        
+        print("Facerecognizer: detect in ROIs")
         gray_img = input_data['gray']
+        print("Facerecognizer: gray image", gray_img.shape)
 
         roi_detections = []
         
@@ -111,11 +114,13 @@ class FaceRecognizer(BaseComponent):
             
             if ('all' in self.cfg['params']['triggerlabels']) or \
                 any( [ l['label'] in self.cfg['params']['triggerlabels'] for l in r['labels'] ] ) :
-            
+                
                 rect = r['rect']
+                print("Facerecognizer: ROI rect ", rect)
                 x_offset = rect[0]
                 y_offset = rect[1]
                 roi = gray_img[ rect[1]:rect[3], rect[0]:rect[2] ]
+                print("Facerecognizer: ROI ", roi.shape)
                 
                 results = self._detect_in_area(roi.copy())
                 
@@ -135,11 +140,16 @@ class FaceRecognizer(BaseComponent):
                 
         
     def _detect_in_area(self, gray_img):
+
+        if self.equalize_hist:
+            gray_img = cv2.equalizeHist(gray_img)
         
         if gray_img.shape != self.train_img_size:
-            roi = cv2.resize( gray_img, self.train_img_size[::-1] )
+            print("recognizer input, trainings sizes:", gray_img.shape, self.train_img_size[::-1])
+            roi = cv2.resize( gray_img, (self.train_img_size[1], self.train_img_size[0]) )
         else:
             roi = gray_img
+            
             
         eigen_label, eigen_conf = self.eigen.predict(roi) if self.eigen else (-1,-1)
         fischer_label, fischer_conf = self.fischer.predict(roi) if self.fischer else (-1,-1)

@@ -15,6 +15,7 @@ import os
 import os.path
 import yaml
 import sys
+import traceback
 
 class MultiPipelineExecutor(object):
     '''
@@ -32,22 +33,21 @@ class MultiPipelineExecutor(object):
         
         # Start pipelines.
         num_pipeline_processors = multiprocessing.cpu_count()
-        num_pipeline_processors = 1
         print('Creating %d pipelines' % num_pipeline_processors)
         pipeline_processors = [ 
             PipelineProcessor(pipeline_file, input_directory, output_directory, file_queue) 
             for i in range(num_pipeline_processors) ]
             
-        for w in pipeline_processors:
-            w.start()
-        
         # Enqueue files in input directory.
         for dirpath,dirs,files in os.walk(input_directory):
             for f in files:
                 file_path = os.path.join(dirpath, f)
                 print("put in queue:", file_path)
                 file_queue.put(file_path)
-        
+
+        for w in pipeline_processors:
+            w.start()
+                
         # Add an end command in each queue
         for i in range(num_pipeline_processors):
             file_queue.put(None)
@@ -75,15 +75,22 @@ class PipelineProcessor(multiprocessing.Process):
         while True:
             next_file = self.file_queue.get()
             if next_file is None:
-                # Poison pill means shutdown
+                # None means shutdown this process.
                 print('%s: Exiting' % proc_name)
                 self.file_queue.task_done()
                 break
                 
             print('%s: Executing %s' % (proc_name, next_file))
-            self.pipeline.execute(next_file)
-            print('%s: Executed %s' % (proc_name, next_file))
-            self.file_queue.task_done()
+            # Termination of process due to uncaught exception will hold up 
+            # the main process because it'll wait on queue forever.
+            try:
+                self.pipeline.execute(next_file)
+                print('%s: Executed %s' % (proc_name, next_file))
+            except:
+                print("*****************\nException while executing " + next_file)
+                traceback.print_exc()
+            finally:
+                self.file_queue.task_done()
 
         return        
     
@@ -220,9 +227,10 @@ class Pipeline(object):
             raise "Unknown image format " + input_data['img'].shape
         
         print("Input image:", input_data['img'].shape)
+        print("Grayscale image:", input_data['gray'].shape)
         
         for comp in self.components:
-            print("Executing " + comp.name + " on " + input_data['file'])
+            print("Executing %s on %s frame %d" % (comp.name, input_data['file'], input_data.get('frame', 0)))
             comp_outputs = comp.execute(input_data, self.input_directory, self.output_directory)
             
             # At each stage of the pipeline, collect the component's outputs

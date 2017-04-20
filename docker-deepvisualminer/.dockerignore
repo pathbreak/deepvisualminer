@@ -1,0 +1,7 @@
+./deepvisualminer/.dockerignore
+./deepvisualminer/docker-deepvisualminer
+./deepvisualminer/.git
+./deepvisualminer/Readme.md
+./deepvisualminer/LICENSE
+opencv/*
+!opencv/data

@@ -37,7 +37,7 @@ class SimpleDetector(BaseComponent):
                 comp_outputs = input_data.get(source)
                 if comp_outputs:
                     comp_reports = comp_outputs['reports']
-                    detections = self.detect_in_rois(self, input_data, comp_reports)
+                    detections = self.detect_in_rois(input_data, comp_reports)
                     all_detections.extend(detections)
 
         print(all_detections)
@@ -84,19 +84,21 @@ class SimpleDetector(BaseComponent):
             
             if ('all' in self.cfg['params']['triggerlabels']) or \
                 any( [ l['label'] in self.cfg['params']['triggerlabels'] for l in r['labels'] ] ) :
-            
+                
                 rect = r['rect']
+                print("simpledetector: ROI rect ", rect)
                 x_offset = rect[0]
                 y_offset = rect[1]
                 roi = gray_img[ rect[1]:rect[3], rect[0]:rect[2] ]
                 
-                hits = self.detector.detectMultiScale(gray_img, 
+                hits = self.detector.detectMultiScale(roi, 
                     self.scaledown_factor, 
                     self.min_neighbors, 
                     0, min_size)
 
                 # These detections in ROI are relative to ROI. So we must add ROI origin to
                 # those coordinates to make them full image coordinates.
+                print("simpledetector hits:", hits)
                 results = [ 
                     {
                         'labels' : [{'label':self.output_label}],

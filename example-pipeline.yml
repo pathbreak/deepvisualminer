@@ -112,6 +112,10 @@ pipeline:
     outputlabel: 
     - mostvotes
     
+    # If recognizer was trained with histogram equalization enabled, you
+    # should enable it during recognition too.
+    equalizehist: false
+    
   
 - name: combinedreporter
   type: jsonreportwriter

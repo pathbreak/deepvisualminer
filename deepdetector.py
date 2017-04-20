@@ -46,7 +46,7 @@ class DeepDetector(BaseComponent):
                 comp_outputs = input_data.get(source)
                 if comp_outputs:
                     comp_reports = comp_outputs['reports']
-                    detections = self.detect_in_rois(self, input_data, comp_reports)
+                    detections = self.detect_in_rois(input_data, comp_reports)
                     all_detections.extend(detections)
         
         # Each detection is of the form 
