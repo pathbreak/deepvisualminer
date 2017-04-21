@@ -384,8 +384,6 @@ Steps are:
 
   [OUTPUT-PATH-FOR-TESTING-SET-CSV] => Path where the list of files selected 
     as test set are written. This is necessary to avoid testing on the training samples.
-  ```
-
 
   [MODEL-DIRECTORY] => The directory where recognizer will output model files.
 
