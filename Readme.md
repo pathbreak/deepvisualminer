@@ -104,7 +104,7 @@ you can build one or both on your own...
 
 3. Next, decide whether you want to build an optimized version of TensorFlow or use the stock
    version available in PyPI. If you want to use the stock version, skip the rest of this section 
-   and jump to step 3 directly.
+   and jump to step 4 directly.
 
    ​
 
