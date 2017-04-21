@@ -6,16 +6,16 @@ and traditional face detection + recognition techniques.
 Table of Contents
 =================
 
-      * [What does this do / what problem does this solve?](#what-does-this-do--what-problem-does-this-solve)
-      * [Hardware selection](#hardware-selection)
-      * [Install Docker](#install-docker)
-      * [Download the Docker images](#download-the-docker-images)
-      * [Build your own Docker images](#build-your-own-docker-images)
-      * [Test Docker images](#test-docker-images)
-      * [Train the face recognizer](#train-the-face-recognizer)
-      * [Prepare Pipeline Configuration](#prepare-pipeline-configuration)
-      * [Start the Visual Mining](#start-the-visual-mining)
-      * [Example Reports](#example-reports)
+   * [What does this do / what problem does this solve?](#what-does-this-do--what-problem-does-this-solve)
+   * [Hardware selection](#hardware-selection)
+   * [Install Docker](#install-docker)
+   * [Download the Docker images](#download-the-docker-images)
+   * [Build your own Docker images](#build-your-own-docker-images)
+   * [Test Docker images](#test-docker-images)
+   * [Train the face recognizer](#train-the-face-recognizer)
+   * [Prepare Pipeline Configuration](#prepare-pipeline-configuration)
+   * [Start the Visual Mining](#start-the-visual-mining)
+   * [Example Reports](#example-reports)
 
 ## What does this do / what problem does this solve?
 
