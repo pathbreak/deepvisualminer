@@ -3,6 +3,20 @@
 Deep visual mining for your photos and videos using YOLOv2 deep convolutional neural network based object detector 
 and traditional face detection + recognition techniques.
 
+Table of Contents
+=================
+
+      * [What does this do / what problem does this solve?](#what-does-this-do--what-problem-does-this-solve)
+      * [Hardware selection](#hardware-selection)
+      * [Install Docker](#install-docker)
+      * [Download the Docker images](#download-the-docker-images)
+      * [Build your own Docker images](#build-your-own-docker-images)
+      * [Test Docker images](#test-docker-images)
+      * [Train the face recognizer](#train-the-face-recognizer)
+      * [Prepare Pipeline Configuration](#prepare-pipeline-configuration)
+      * [Start the Visual Mining](#start-the-visual-mining)
+      * [Example Reports](#example-reports)
+
 ## What does this do / what problem does this solve?
 
 This software enables you to detect stuff - objects, people, animals, etc - and optionally attempt to identify individuals in photos and videos. It 
@@ -88,16 +102,18 @@ you can build one or both on your own...
    version available in PyPI. If you want to use the stock version, skip the rest of this section 
    and jump to step 3 directly.
 
-   The optimized version is for optimized only for running on CPUs and is potentially faster at linear algebra
+   ​
+
+   The optimized version is optimized only for running on CPUs and is potentially faster at linear algebra
    operations because it uses modern CPU instruction sets like SSE4.x, SSSE3, AVX, AVX2, FMA, etc.
    If does **not** include GPU support (but you can enable it easily by adding '--config=cuda' and TF_NEED_CUDA=1
    in `build-tensorflow.sh` - note that neither these scripts nor images have not been tested for CUDA configuration).
 
    ​
 
-   If you decide to build optimized version, see 
-   https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc/x86-Options.html#x86-Options for list of architectures and
-   which instruction sets they contain, and edit the "CC_OPT_FLAGS='-march=<whatever>..." line appropriately in 
+   If you decide to build the optimized version, see 
+   https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc/x86-Options.html#x86-Options for a list of architectures and
+   which instruction sets they contain, and edit the "CC_OPT_FLAGS='-march=[architecture]..." line appropriately in 
    `docker-deepvisualminer/build-tensorflow.sh`.
 
    ​
@@ -110,11 +126,13 @@ you can build one or both on your own...
     ./launch-tensorflow.sh 
     ```
 
-    The optimized TensorFlow package is placed under `./shared/tensorflow/`.
+    Once built, the optimized TensorFlow package is placed under `./shared/tensorflow/`.
 
    ​
 
-4. Next, run `docker-deepvisualminer/build-image.sh` that builds or downloads other prerequisites.   
+4. Next, run `docker-deepvisualminer/build-image.sh` for building or downloading other prerequisites. 
+
+     
    It builds Darkflow in a temporary container and downloads OpenCV detector data files:
 
    ```sh
@@ -167,7 +185,7 @@ you can build one or both on your own...
 
    ​
 
- 
+
 
 ## Test Docker images
 
@@ -179,7 +197,7 @@ or to test whether one you built yourself is correct, start a test container and
  ```
 
  where `deepvisualminer` is the image name you downloaded (it'll be `deepvisualminer-haswell` if
- you downloaded the optimized version, or whatever name you gave if you built the image yourself.
+ you downloaded the optimized version, or whatever name you gave if you built the image yourself).
 
  In the container shell, run this:
  ```
@@ -349,6 +367,7 @@ Steps are:
   [PERCENT-OF-SAMPLES-TO-USE-AS-TRAINING-IMAGES] => Proportion of images in dataset to use for training. 60-80% 													is typical. Do not set below or above that range.
 
   [OUTPUT-PATH-FOR-TESTING-SET-CSV] => Path where the list of files selected as test set are written. This is 									 necessary to avoid testing on the training samples.
+  ```
 
 
   [MODEL-DIRECTORY] => The directory where recognizer will output model files.

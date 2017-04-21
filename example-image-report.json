@@ -1,6 +1,6 @@
 {
     "type": "photo",
-    "file": "/media/karthik/Developer/developer/work/paid-articles/linode/spark-on-linode/deepvisualminer/images/img1.jpg",
+    "file": "/media/karthik/Developer/developer/deepvisualminer/images/img1.jpg",
     "frames": [
         {
             "coco-detector": [
