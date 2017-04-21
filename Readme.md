@@ -27,7 +27,7 @@ with a database like PostgreSQL or a text search engine like Solr.
 
 ## Hardware selection
 
-While this software has been tested as runnable on a modest laptop with 8GB RAM and an old core-i3 CPU, it's both a memory and CPU hog when there's just a single deep object detector. Run it on a machine with high CPU cores and RAM. 
+While this software has been tested as runnable on a modest laptop with 8GB RAM and an old core-i3 CPU, it's both a memory and CPU hog even if there's just a single deep object detector, since it creates one detector per core on the machine. Run it on a machine with high CPU cores and RAM. 
 
 It expects the photo collection to be available on local filesystem, and saves outputs - such as results of detection and recognition in text format, annotated photos, annotated video frames and annotated videos - on local filesystem. Annotated video frames are especially heavy on storage. So storage capacity should accommodate not only the the photo collection itself but also configured output files from the processing pipeline.
 
