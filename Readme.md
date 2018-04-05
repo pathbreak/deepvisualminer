@@ -19,12 +19,18 @@ Table of Contents
 
 ## What does this do / what problem does this solve?
 
-This software enables you to detect stuff - objects, people, animals, etc - and optionally attempt to identify people and pets in your photo and video collections.
+This software enables you to detect stuff - objects, people, animals, etc - and identify people and pets in your photo and video collections.
 
-It opens up the possibility of implementing a search engine for the content in your photo collections by integrating its output 
-with a database like PostgreSQL or a text search engine like Solr.
+It opens up the possibility of implementing intelligent search engines for your photo collections. Since this is software that can be run on your own computers, it has unmatched privacy because you don't have to upload your personal photos and videos anywhere.
 
-Article link: [Mine your Photos and Videos using Deep learning and Face recognition](https://medium.com/linode-cube/mine-your-photos-and-videos-on-linode-using-deep-learning-face-recognition-5e1bd7118605)
+Imagine being able to run search queries like *"find all videos of 2008 with our daughter and our dog in it"*.
+
+It generates reports of detections and recognitions which can then be integrated with with a database like PostgreSQL or a text search engine like Solr.
+
+*Article link*: [Mine your Photos and Videos using Deep learning and Face recognition](https://medium.com/linode-cube/mine-your-photos-and-videos-on-linode-using-deep-learning-face-recognition-5e1bd7118605)
+
+*Current status (April 2018)*: It's currently capable of object detection and rather inaccurate recognition. I'm planning to implement much better models and a full end-to-end search engine.
+
 
 ## Demos
 
